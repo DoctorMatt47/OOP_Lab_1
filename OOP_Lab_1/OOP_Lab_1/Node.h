@@ -22,10 +22,9 @@ public:
 	Node* GetPrev();
 
 	void SetPrev(Node<T>* pPrev);
-
 };
 
-template<class T>
+template <class T>
 inline Node<T>::Node(T data, Node* pPrev, Node* pNext)
 {
 	_data = data;
@@ -33,37 +32,37 @@ inline Node<T>::Node(T data, Node* pPrev, Node* pNext)
 	_pNext = pNext;
 }
 
-template<class T>
+template <class T>
 inline T Node<T>::GetData()
 {
 	return _data;
 }
 
-template<class T>
+template <class T>
 inline void Node<T>::SetData(T data)
 {
 	_data = data;
 }
 
-template<class T>
+template <class T>
 inline Node<T>* Node<T>::GetNext()
 {
 	return _pNext;
 }
 
-template<class T>
+template <class T>
 inline void Node<T>::SetNext(Node<T>* pNext)
 {
 	_pNext = pNext;
 }
 
-template<class T>
+template <class T>
 inline Node<T>* Node<T>::GetPrev()
 {
 	return _pPrev;
 }
 
-template<class T>
+template <class T>
 inline void Node<T>::SetPrev(Node<T>* pPrev)
 {
 	_pPrev = pPrev;
