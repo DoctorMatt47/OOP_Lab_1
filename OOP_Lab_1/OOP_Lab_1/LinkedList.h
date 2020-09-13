@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <vector>
 
 #include "Node.h"
 #include "IList.h"
@@ -33,6 +34,30 @@ public:
 
 	LinkedList(const LinkedList<T>&& other) noexcept;
 
+	explicit LinkedList(std::vector<T> v);
+
+	size_t GetSize() const;
+
+	Node<T>* GetFirstNode() const;
+
+	Node<T>* GetLastNode() const;
+
+	T GetFirst() const;
+
+	T GetLast() const;
+
+	T GetByIndex(size_t i) const;
+
+	void Print(std::function<void(T)> print) const override;
+
+	void ChangeFirst(T data);
+
+	void ChangeLast(T data);
+
+	void ChangeByIndex(T data, size_t i);
+
+	void FillByVector(std::vector<T> v);
+
 	void PushFront(T data) override;
 
 	void PushBack(T data) override;
@@ -45,8 +70,6 @@ public:
 
 	void Remove(size_t i) override;
 
-	void Print(std::function<void(T)> print) override;
-
 	void Clear() override;
 
 	void QuickSort(std::function<bool(T, T)> comparePredicate);
@@ -55,7 +78,7 @@ public:
 
 	void MergeSort(std::function<bool(T, T)> comparePredicate);
 
-	Node<T>* mergeSort(Node<T>* first, std::function<bool(T, T)> comparePredicate);
+	void CountingSort(std::function<size_t(T)> sortField);
 	
 };
 
@@ -105,7 +128,7 @@ void LinkedList<T>::QuickSortRecursive(Node<T>* l, Node<T>* h, std::function<boo
 	}
 }
 
-template<class T>
+template <class T>
 Node<T>* LinkedList<T>::Split(Node<T>* head)
 {
 	{
@@ -155,11 +178,11 @@ Node<T>* LinkedList<T>::MergeSortRecursive(Node<T>* first, std::function<bool(T,
 {
 	if (!first || !first->GetNext())
 		return first;
-	Node<T>* second = split(first);
+	Node<T>* second = Split(first);
 
 	// Recur for left and right halves  
-	first = mergeSort(first, comparePredicate);
-	second = mergeSort(second, comparePredicate);
+	first = MergeSortRecursive(first, comparePredicate);
+	second = MergeSortRecursive(second, comparePredicate);
 
 	// Merge the two sorted halves  
 	return Merge(first, second, comparePredicate);
@@ -180,6 +203,18 @@ LinkedList<T>::~LinkedList()
 }
 
 template <class T>
+LinkedList<T>::LinkedList(std::vector<T> v)
+{
+	_head = nullptr;
+	_tail = nullptr;
+	_currentSize = 0;
+	for (auto val : v)
+	{
+		PushBack(val);
+	}
+}
+
+template <class T>
 LinkedList<T>::LinkedList(const LinkedList<T>& other)
 {
 	Node<T>* cur = other._head;
@@ -195,6 +230,80 @@ LinkedList<T>::LinkedList(const LinkedList<T>&& other) noexcept
 	this->_currentSize = other._currentSize;
 	this->_head = other._head;
 	this->_tail = other._tail;
+}
+
+template <class T>
+size_t LinkedList<T>::GetSize() const
+{
+	return _currentSize;
+}
+
+template <class T>
+Node<T>* LinkedList<T>::GetFirstNode() const
+{
+	return _head;
+}
+
+template <class T>
+Node<T>* LinkedList<T>::GetLastNode() const
+{
+	return _tail;
+}
+
+template <class T>
+T LinkedList<T>::GetFirst() const
+{
+	return _head->GetData();
+}
+
+template <class T>
+T LinkedList<T>::GetLast() const 
+{
+	return _tail->GetData();
+}
+
+template <class T>
+T LinkedList<T>::GetByIndex(const size_t i) const
+{
+	Node<T>* cur = _head;
+	for (auto j = 0; j < i; j++)
+	{
+		cur = cur->GetNext();
+	}
+	return cur->GetData();
+}
+
+template <class T>
+void LinkedList<T>::ChangeFirst(T data)
+{
+	_head->SetData(data);
+}
+
+template <class T>
+void LinkedList<T>::ChangeLast(T data)
+{
+	_tail->SetData(data);
+}
+
+template <class T>
+void LinkedList<T>::ChangeByIndex(T data, size_t i)
+{
+	Node<T>* cur = _head;
+	for (auto j = 0; j < i; j++)
+	{
+		cur = cur->GetNext();
+	}
+	cur->SetData(data);
+}
+
+template <class T>
+void LinkedList<T>::FillByVector(std::vector<T> v)
+{
+	Clear();
+	for (auto val : v)
+	{
+		PushBack(val);
+	}
 }
 
 template <class T>
@@ -356,7 +465,7 @@ void LinkedList<T>::Remove(const size_t i)
 }
 
 template <class T>
-void LinkedList<T>::Print(std::function<void(T)> print)
+void LinkedList<T>::Print(std::function<void(T)> print) const
 {
 	Node<T>* cur = _head;
 	while (cur)
@@ -406,9 +515,41 @@ void LinkedList<T>::InsertionSort(std::function<bool(T, T)> comparePredicate)
 	}
 }
 
-template<class T>
+template <class T>
 void LinkedList<T>::MergeSort(std::function<bool(T, T)> comparePredicate)
 {
 	if (_currentSize <= 1) return;
-	_head = mergeSort(_head, comparePredicate);
+	_head = MergeSortRecursive(_head, comparePredicate);
+}
+
+template <class T>
+void LinkedList<T>::CountingSort(std::function<size_t(T)> sortField)
+{
+	std::vector<size_t> buckets;
+	for (Node<T>* i = _head; i != nullptr; i = i->GetNext())
+	{
+		const int field = sortField(i->GetData());
+
+		//Increase the bucket size, if necessary
+		for (int j = buckets.size(); j <= field; j++)
+			buckets.push_back(0);
+
+		++buckets[field];
+	}
+	const auto size = buckets.size();
+	std::vector<size_t> startIndex(buckets.size());
+	for (size_t j = 1; j < buckets.size(); j++)
+	{
+		startIndex[j] = buckets[j - 1] + startIndex[j - 1];
+	}
+
+	std::vector<T> result(_currentSize);
+	for (Node<T>* i = _head; i != nullptr; i = i->GetNext())
+	{
+		const int field = sortField(i->GetData());
+		auto destIndex = startIndex[field]++;
+		result[destIndex] = i->GetData();
+	}
+
+	FillByVector(result);
 }
