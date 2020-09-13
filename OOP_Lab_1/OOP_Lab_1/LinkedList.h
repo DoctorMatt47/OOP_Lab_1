@@ -15,16 +15,6 @@ private:
 	Node<T>* _tail;
 	size_t _currentSize;
 	
-	Node<T>* Partition(Node<T>* l, Node<T>* h, std::function<bool(T, T)> comparePredicate);
-
-	void QuickSortRecursive(Node<T>* l, Node<T>* h, std::function<bool(T, T)> comparePredicate);
-
-	Node<T>* Split(Node<T>* head);
-
-	Node<T>* Merge(Node<T>* first, Node<T>* second, std::function<bool(T, T)> comparePredicate);
-
-	Node<T>* MergeSortRecursive(Node<T>* first, std::function<bool(T, T)> comparePredicate);
-	
 public:
 	LinkedList();
 
@@ -35,28 +25,20 @@ public:
 	LinkedList(const LinkedList<T>&& other) noexcept;
 
 	explicit LinkedList(std::vector<T> v);
+	
+	void FillByVector(std::vector<T> v);
 
 	size_t GetSize() const;
 
-	Node<T>* GetFirstNode() const;
+	Node<T>* GetHead() const;
 
-	Node<T>* GetLastNode() const;
+	Node<T>* GetTail() const;
 
-	T GetFirst() const;
+	void MoveHead(bool isToLeft = true);
 
-	T GetLast() const;
-
-	T GetByIndex(size_t i) const;
+	void MoveTail(bool isToRight = true);
 
 	void Print(std::function<void(T)> print) const override;
-
-	void ChangeFirst(T data);
-
-	void ChangeLast(T data);
-
-	void ChangeByIndex(T data, size_t i);
-
-	void FillByVector(std::vector<T> v);
 
 	void PushFront(T data) override;
 
@@ -71,122 +53,8 @@ public:
 	void Remove(size_t i) override;
 
 	void Clear() override;
-
-	void QuickSort(std::function<bool(T, T)> comparePredicate);
-
-	void InsertionSort(std::function<bool(T, T)> comparePredicate);
-
-	void MergeSort(std::function<bool(T, T)> comparePredicate);
-
-	void CountingSort(std::function<size_t(T)> sortField);
 	
 };
-
-template <class T>
-Node<T>* LinkedList<T>::Partition(Node<T>* l, Node<T>* h, std::function<bool(T, T)> comparePredicate)
-{
-	// set pivot as h element  
-	auto x = h->GetData();
-
-	// similar to i = l-1 for array implementation  
-	Node<T>* i = l->GetPrev();
-
-	// Similar to "for (int j = l; j <= h- 1; j++)"  
-	for (Node<T>* j = l; j != h; j = j->GetNext())
-	{
-		if (comparePredicate(x, j->GetData()))
-		{
-			// Similar to i++ for array  
-			i = (i == nullptr) ? l : i->GetNext();
-
-			if (i != j)
-			{
-				T temp = i->GetData();
-				i->SetData(j->GetData());
-				j->SetData(temp);
-			}
-		}
-	}
-	i = (i == nullptr) ? l : i->GetNext(); // Similar to i++  
-	if (i != h)
-	{
-		T temp = i->GetData();
-		i->SetData(h->GetData());
-		h->SetData(temp);
-	}
-	return i;
-}
-
-template <class T>
-void LinkedList<T>::QuickSortRecursive(Node<T>* l, Node<T>* h, std::function<bool(T, T)> comparePredicate)
-{
-	if (h != nullptr && l != h && l != h->GetNext())
-	{
-		Node<T>* p = Partition(l, h, comparePredicate);
-		QuickSortRecursive(l, p->GetPrev(), comparePredicate);
-		QuickSortRecursive(p->GetNext(), h, comparePredicate);
-	}
-}
-
-template <class T>
-Node<T>* LinkedList<T>::Split(Node<T>* head)
-{
-	{
-		Node<T>* fast = head;
-		Node<T>* slow = head;
-		while (fast->GetNext() && fast->GetNext()->GetNext())
-		{
-			fast = fast->GetNext()->GetNext();
-			slow = slow->GetNext();
-		}
-		Node<T>* temp = slow->GetNext();
-		slow->SetNext(nullptr);
-		return temp;
-	}
-}
-
-template <class T>
-Node<T>* LinkedList<T>::Merge(Node<T>* first, Node<T>* second, std::function<bool(T, T)> comparePredicate)
-{
-	// If first linked list is empty  
-	if (!first)
-		return second;
-
-	// If second linked list is empty  
-	if (!second)
-		return first;
-
-	// Pick the smaller value  
-	if (comparePredicate(second->GetData(), first->GetData()))
-	{
-		first->SetNext(Merge(first->GetNext(), second, comparePredicate));
-		first->GetNext()->SetPrev(first);
-		first->SetPrev(nullptr);
-		return first;
-	}
-	else
-	{
-		second->SetNext(Merge(first, second->GetNext(), comparePredicate));
-		second->GetNext()->SetPrev(second);
-		second->SetPrev(nullptr);
-		return second;
-	}
-}
-
-template <class T>
-Node<T>* LinkedList<T>::MergeSortRecursive(Node<T>* first, std::function<bool(T, T)> comparePredicate)
-{
-	if (!first || !first->GetNext())
-		return first;
-	Node<T>* second = Split(first);
-
-	// Recur for left and right halves  
-	first = MergeSortRecursive(first, comparePredicate);
-	second = MergeSortRecursive(second, comparePredicate);
-
-	// Merge the two sorted halves  
-	return Merge(first, second, comparePredicate);
-}
 
 template <class T>
 LinkedList<T>::LinkedList() : IList<T>()
@@ -239,61 +107,45 @@ size_t LinkedList<T>::GetSize() const
 }
 
 template <class T>
-Node<T>* LinkedList<T>::GetFirstNode() const
+Node<T>* LinkedList<T>::GetHead() const
 {
 	return _head;
 }
 
 template <class T>
-Node<T>* LinkedList<T>::GetLastNode() const
+Node<T>* LinkedList<T>::GetTail() const
 {
 	return _tail;
 }
 
 template <class T>
-T LinkedList<T>::GetFirst() const
+void LinkedList<T>::MoveHead(const bool isToLeft)
 {
-	return _head->GetData();
-}
-
-template <class T>
-T LinkedList<T>::GetLast() const 
-{
-	return _tail->GetData();
-}
-
-template <class T>
-T LinkedList<T>::GetByIndex(const size_t i) const
-{
-	Node<T>* cur = _head;
-	for (auto j = 0; j < i; j++)
+	if (isToLeft)
 	{
-		cur = cur->GetNext();
+		if (_head->GetPrev())
+			_head = _head->GetPrev();
 	}
-	return cur->GetData();
-}
-
-template <class T>
-void LinkedList<T>::ChangeFirst(T data)
-{
-	_head->SetData(data);
-}
-
-template <class T>
-void LinkedList<T>::ChangeLast(T data)
-{
-	_tail->SetData(data);
-}
-
-template <class T>
-void LinkedList<T>::ChangeByIndex(T data, size_t i)
-{
-	Node<T>* cur = _head;
-	for (auto j = 0; j < i; j++)
+	else
 	{
-		cur = cur->GetNext();
+		if (_head->GetNext())
+			_head = _head->GetNext();
 	}
-	cur->SetData(data);
+}
+
+template <class T>
+void LinkedList<T>::MoveTail(const bool isToRight)
+{
+	if (isToRight)
+	{
+		if (_tail->GetNext())
+			_tail = _tail->GetNext();
+	}
+	else
+	{
+		if (_tail->GetPrev())
+			_tail = _tail->GetPrev();
+	}
 }
 
 template <class T>
@@ -483,73 +335,4 @@ void LinkedList<T>::Clear()
 	{
 		PopFront();
 	}
-}
-
-template <class T>
-void LinkedList<T>::QuickSort(std::function<bool(T, T)> comparePredicate)
-{
-	if (_currentSize > 1)
-		QuickSortRecursive(_head, _tail, comparePredicate);
-}
-
-template <class T>
-void LinkedList<T>::InsertionSort(std::function<bool(T, T)> comparePredicate)
-{
-	if (_currentSize <= 1) return;
-
-	for (Node<T>* i = _head->GetNext(); i != nullptr; i = i->GetNext())
-	{
-		T key = i->GetData();
-		Node<T>* j = i->GetPrev();
-
-		while (j && comparePredicate(j->GetData(), key))
-		{
-			j->GetNext()->SetData(j->GetData());
-			j = j->GetPrev();
-		}
-		
-		if (j)
-			j->GetNext()->SetData(key);
-		else 
-			_head->SetData(key);
-	}
-}
-
-template <class T>
-void LinkedList<T>::MergeSort(std::function<bool(T, T)> comparePredicate)
-{
-	if (_currentSize <= 1) return;
-	_head = MergeSortRecursive(_head, comparePredicate);
-}
-
-template <class T>
-void LinkedList<T>::CountingSort(std::function<size_t(T)> sortField)
-{
-	std::vector<size_t> buckets;
-	for (Node<T>* i = _head; i != nullptr; i = i->GetNext())
-	{
-		const int field = sortField(i->GetData());
-
-		//Increase the bucket size, if necessary
-		for (int j = buckets.size(); j <= field; j++)
-			buckets.push_back(0);
-
-		++buckets[field];
-	}
-	const auto size = buckets.size();
-	std::vector<size_t> startIndex(buckets.size());
-	for (size_t j = 1; j < buckets.size(); j++)
-	{
-		startIndex[j] = buckets[j - 1] + startIndex[j - 1];
-	}
-
-	std::vector<T> result(_currentSize);
-	for (Node<T>* i = _head; i != nullptr; i = i->GetNext())
-	{
-		const int field = sortField(i->GetData());
-		auto destIndex = startIndex[field]++;
-		result[destIndex] = i->GetData();
-	}
-
-	FillByVector(result);
 }
