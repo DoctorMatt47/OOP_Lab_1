@@ -1,5 +1,7 @@
 #pragma once
 
+#include <algorithm>
+
 #include "LinkedList.h"
 
 template <class T>
@@ -17,6 +19,11 @@ private:
 	static Node<T>* MergeSortRecursive(Node<T>* first, std::function<bool(T, T)> comparePredicate);
 	
 public:
+	static void GnomeSort(LinkedList<T>& list, std::function<bool(T, T)> comparePredicate);
+
+	static void BubbleSort(LinkedList<T>& list, std::function<bool(T, T)> comparePredicate);
+
+	static void SelectionSort(LinkedList<T>& list, std::function<bool(T, T)> comparePredicate);
 	
 	static void QuickSort(LinkedList<T>& list, std::function<bool(T, T)> comparePredicate);
 
@@ -25,6 +32,8 @@ public:
 	static void MergeSort(LinkedList<T>& list, std::function<bool(T, T)> comparePredicate);
 
 	static void CountingSort(LinkedList<T>& list, std::function<size_t(T)> sortField);
+
+	static void BucketSort(LinkedList<T>& list, std::function<float(T)> sortField);
 };
 
 template <class T>
@@ -129,6 +138,119 @@ Node<T>* ListSorter<T>::MergeSortRecursive(Node<T>* first, std::function<bool(T,
 
 	// Merge the two sorted halves  
 	return Merge(first, second, comparePredicate);
+}
+
+template <class T>
+void ListSorter<T>::BucketSort(LinkedList<T>& list, std::function<float(T)> sortField)
+{
+	// 1) Create n empty buckets
+	auto n = list.GetSize();
+	std::vector<std::vector<T>> b(n);
+
+	// 2) Put array elements in different buckets 
+	for (Node<T>* index = list.GetHead(); index; index = index->GetNext())
+	{
+		int bi = n * sortField(index->GetData()); // Index in bucket
+		b[bi].push_back(index->GetData());
+	}
+
+	// 3) Sort individual buckets 
+	for (size_t i = 0; i < n; i++)
+		std::sort(b[i].begin(), b[i].end(), [&sortField](T t1, T t2)
+		{
+			return sortField(t1) < sortField(t2);
+		});
+
+	// 4) Concatenate all buckets into arr[] 
+	Node<T>* index = list.GetHead();
+	for (size_t i = 0; i < n; i++)
+		for (size_t j = 0; j < b[i].size(); j++)
+		{
+			index->SetData(b[i][j]);
+			index = index->GetNext();
+		}
+
+}
+
+template <class T>
+void ListSorter<T>::GnomeSort(LinkedList<T>& list, std::function<bool(T, T)> comparePredicate)
+{
+	Node<T>* index = list.GetHead();
+
+	while (index)
+	{
+		if (index == list.GetHead())
+			index = index->GetNext();
+		
+		if (comparePredicate(index->GetData(), index->GetPrev()->GetData()))
+			index = index->GetNext();
+		
+		else
+		{
+			auto temp = index->GetData();
+			index->SetData(index->GetPrev()->GetData());
+			index->GetPrev()->SetData(temp);
+			index = index->GetPrev();
+		}
+	}
+}
+
+template <class T>
+void ListSorter<T>::BubbleSort(LinkedList<T>& list, std::function<bool(T, T)> comparePredicate)
+{
+	/* Checking for empty list */
+	if (list.GetSize() <= 1)
+		return;
+
+	bool isSwapped;
+	Node<T>* last = nullptr;
+	do
+	{
+		isSwapped = false;
+		Node<T>* cur = list.GetHead();
+
+		while (cur->GetNext() != last)
+		{
+			if (comparePredicate(cur->GetData(), cur->GetNext()->GetData()))
+			{
+				auto temp = cur->GetData();
+				cur->SetData(cur->GetNext()->GetData());
+				cur->GetNext()->SetData(temp);
+				isSwapped = true;
+			}
+			cur = cur->GetNext();
+		}
+		last = cur;
+	}
+	while (isSwapped);
+}
+
+template <class T>
+void ListSorter<T>::SelectionSort(LinkedList<T>& list, std::function<bool(T, T)> comparePredicate)
+{
+	Node<T>* temp = list.GetHead();
+
+	// Traverse the List 
+	while (temp)
+	{
+		Node<T>* min = temp;
+		Node<T>* r = temp->GetNext();
+
+		// Traverse the unsorted sublist 
+		while (r)
+		{
+			if (comparePredicate(min->GetData(), r->GetData()))
+				min = r;
+
+			r = r->GetNext();
+		}
+
+		// Swap Data 
+		auto x = temp->GetData();
+		temp->SetData(min->GetData());
+		min->SetData(x);
+		temp = temp->GetNext();
+	}
 }
 
 template <class T>
