@@ -7,6 +7,15 @@
 #include "IList.h"
 
 
+/**
+ * \brief Doubly-linked list
+ *
+ * LinkedList is a container that supports constant time insertion and removal of elements from anywhere in the container.
+ * It is implemented as a doubly-linked list. This container provides bidirectional iteration capability.
+ * Cannot be inherited.
+ * 
+ * \tparam T The type of the elements.
+ */
 template <class T>
 class LinkedList final : public IList<T>
 {
@@ -16,41 +25,103 @@ private:
 	size_t _currentSize;
 	
 public:
+	/**
+	 * Default constructor. Constructs an empty container. 
+	 */
 	LinkedList();
 
-	~LinkedList();
+	/**
+	* Constructs and fills the container with data from the vector.
+	* \param v Vector with data to be placed in the container.
+	*/
+	explicit LinkedList(std::vector<T> v);
 
+	/**
+	 * Copy constructor. Constructs the container with the copy of the contents of other .
+	 * \param other Another container to be used as source to initialize the elements of the container with.
+	 */
 	LinkedList(const LinkedList<T>& other);
 
+	/**
+	 * Move constructor. Constructs the container with the contents of other using move semantics.
+	 * \param other Another container to be used as source to initialize the elements of the container with.
+	 */
 	LinkedList(const LinkedList<T>&& other) noexcept;
 
-	explicit LinkedList(std::vector<T> v);
+	/**
+	* Destructs the list.
+	*/
+	~LinkedList();
+
+	/**
+	 *	Copies all the elements from other into the container.
+	 * \param other Object of the same type.
+	 */
+	LinkedList<T>& operator=(const LinkedList<T>& other);
+
+	/**
+	 * Moves all the elements of other into the container.
+	 * \param other Object of the same type.
+	 */
+	LinkedList<T>& operator=(LinkedList<T>&& other) noexcept;
 	
+	/**
+	 * Removes all elements and fills the container with data from the vector.
+	 * \param v Vector with data to be placed in the container. 
+	 */
 	void FillByVector(std::vector<T> v);
 
+	/**
+	* Returns the number of elements in the container.
+	* \return The number of elements in the container.
+	*/
 	size_t GetSize() const;
 
+	/**
+	 * Returns the first element.
+	 * \return Reference to the first element.
+	 */
 	Node<T>* GetHead() const;
 
+	/**
+	 * Returns the last element .
+	 * \return Reference to the last element.
+	 */
 	Node<T>* GetTail() const;
 
+	/**
+	 * Moves head pointer to the side
+	 * \param isToLeft Side, where pointer will be moved.
+	 * If is true, it will move to the left side, if false - to the right. True by default.
+	 * \warning This method does not increase size of the container!
+	 */
 	void MoveHead(bool isToLeft = true);
 
+	/**
+	 * Moves Tail pointer to the side
+	 * \param isToRight Side, where pointer will be moved.
+	 * If is true, it will move to the right side, if false - to the left. True by default.
+	 * \warning This method does not increase size of the container!
+	 */
 	void MoveTail(bool isToRight = true);
 
-	void Print(std::function<void(T)> print) const override;
+	/**
+	* Adds the element to the beginning of the container.
+	* \param data The element value to add.
+	*/
+	void PushFront(T data);
 
-	void PushFront(T data) override;
+	void PopFront();
 
 	void PushBack(T data) override;
-
-	void PopFront() override;
 
 	void PopBack() override;
 
 	void Insert(T data, size_t i) override;
 
 	void Remove(size_t i) override;
+
+	void Print(std::function<void(const T&)> printer) const override;
 
 	void Clear() override;
 	
@@ -71,6 +142,33 @@ LinkedList<T>::~LinkedList()
 }
 
 template <class T>
+LinkedList<T>& LinkedList<T>::operator=(const LinkedList<T>& other)
+{
+	if (&other != this)
+	{
+		Clear();
+		Node<T>* cur = other._head;
+		while (cur)
+		{
+			LinkedList<T>::PushBack(cur->GetData());
+			cur = cur->GetNext();
+		}
+	}
+	return *this;
+}
+
+template <class T>
+LinkedList<T>& LinkedList<T>::operator=(LinkedList<T>&& other) noexcept
+{
+	this->_currentSize = other._currentSize;
+	this->_head = other._head;
+	this->_tail = other._tail;
+	other._head = nullptr;
+	other._tail = nullptr;
+	return *this;
+}
+
+template <class T>
 LinkedList<T>::LinkedList(std::vector<T> v)
 {
 	_head = nullptr;
@@ -86,9 +184,10 @@ template <class T>
 LinkedList<T>::LinkedList(const LinkedList<T>& other)
 {
 	Node<T>* cur = other._head;
-	for (size_t i = 0; i < other._currentSize; i++)
+	while (cur)
 	{
-		LinkedList<T>::PushBack(other._head->GetData());
+		LinkedList<T>::PushBack(cur->GetData());
+		cur = cur->GetNext();
 	}
 }
 
@@ -98,6 +197,8 @@ LinkedList<T>::LinkedList(const LinkedList<T>&& other) noexcept
 	this->_currentSize = other._currentSize;
 	this->_head = other._head;
 	this->_tail = other._tail;
+	other._head = nullptr;
+	other._tail = nullptr;
 }
 
 template <class T>
@@ -317,15 +418,14 @@ void LinkedList<T>::Remove(const size_t i)
 }
 
 template <class T>
-void LinkedList<T>::Print(std::function<void(T)> print) const
+void LinkedList<T>::Print(std::function<void(const T&)> printer) const
 {
 	Node<T>* cur = _head;
 	while (cur)
 	{
-		print(cur->GetData());
+		printer(cur->GetData());
 		cur = cur->GetNext();
 	}
-	std::cout << std::endl;
 }
 
 template <class T>
