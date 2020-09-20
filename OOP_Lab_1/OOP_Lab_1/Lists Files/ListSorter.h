@@ -554,15 +554,14 @@ template <class T>
 void ListSorter<T>::QuickSort(LinkedList<T>& list, std::function<bool(T, T)> comparePredicate)
 {
 	if (list.GetSize() > 1)
-	{
-		QuickSortRecursive(list.GetHead(), list.GetTail() - 1, comparePredicate);
-	}
+		QuickSortRecursive(list.GetHead(), list.GetTail(), comparePredicate);
 }
 
 template <class T>
 void ListSorter<T>::QuickSort(IArray<T>& list, std::function<bool(T, T)> comparePredicate)
 {
-	QuickSortRecursive(list, 0, list.GetSize() - 1, comparePredicate);
+	if (list.GetSize() > 1)
+		QuickSortRecursive(list, 0, list.GetSize() - 1, comparePredicate);
 }
 
 template <class T>
@@ -632,7 +631,7 @@ template <class T>
 void ListSorter<T>::CountingSort(LinkedList<T>& list, std::function<size_t(T)> sortField)
 {
 	std::vector<size_t> buckets;
-	for (Node<T>* i = list.GetFirst(); i != nullptr; i = i->GetNext())
+	for (Node<T>* i = list.GetHead(); i != nullptr; i = i->GetNext())
 	{
 		const int field = sortField(i->GetData());
 
@@ -650,14 +649,14 @@ void ListSorter<T>::CountingSort(LinkedList<T>& list, std::function<size_t(T)> s
 	}
 
 	std::vector<T> result(list.GetSize());
-	for (Node<T>* i = list.GetFirst(); i != nullptr; i = i->GetNext())
+	for (Node<T>* i = list.GetHead(); i != nullptr; i = i->GetNext())
 	{
 		const int field = sortField(i->GetData());
 		auto destIndex = startIndex[field]++;
 		result[destIndex] = i->GetData();
 	}
 
-	FillByVector(result);
+	list.FillByVector(result);
 }
 
 template <class T>
