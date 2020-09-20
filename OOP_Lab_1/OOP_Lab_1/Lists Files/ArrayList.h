@@ -84,6 +84,8 @@ public:
 
 	T& operator [](size_t index) override;
 
+	T Get(size_t i) override;
+
 	void PushBack(T data) override;
 
 	void PopBack() override;
@@ -133,7 +135,7 @@ ArrayList<T>::ArrayList(const ArrayList<T>& other)
 	_pData = new T[_capacity];
 	for (size_t i = 0; i < _size; i++)
 	{
-		_pData[i] == other._pData[i];
+		_pData[i] = other._pData[i];
 	}
 }
 
@@ -197,6 +199,12 @@ T& ArrayList<T>::operator[](size_t index)
 	if (index < 0 || index > _size) 
 		throw std::exception("Invalid index");
 	return _pData[index];
+}
+
+template <class T>
+T ArrayList<T>::Get(size_t i)
+{
+	return _pData[i];
 }
 
 template <class T>

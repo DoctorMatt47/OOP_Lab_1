@@ -20,9 +20,9 @@ template <class T>
 class LinkedList final : public IList<T>
 {
 private:
-	Node<T>* _head;	
-	Node<T>* _tail;
-	size_t _currentSize;
+	Node<T>* _head = nullptr;	
+	Node<T>* _tail = nullptr;
+	size_t _currentSize = 0;
 	
 public:
 	/**
@@ -111,6 +111,8 @@ public:
 	*/
 	void PushFront(T data);
 
+	T Get(size_t i) override;
+	
 	void PopFront();
 
 	void PushBack(T data) override;
@@ -171,12 +173,9 @@ LinkedList<T>& LinkedList<T>::operator=(LinkedList<T>&& other) noexcept
 template <class T>
 LinkedList<T>::LinkedList(std::vector<T> v)
 {
-	_head = nullptr;
-	_tail = nullptr;
-	_currentSize = 0;
 	for (auto val : v)
 	{
-		PushBack(val);
+		LinkedList<T>::PushBack(val);
 	}
 }
 
@@ -274,6 +273,17 @@ void LinkedList<T>::PushFront(T data)
 		_head = newHead;
 	}
 	_currentSize++;
+}
+
+template <class T>
+T LinkedList<T>::Get(const size_t i)
+{
+	Node<T>* cur = _head;
+	for (auto j = 0; j < i; j++)
+	{
+		cur = cur->GetNext();
+	}
+	return cur->GetData();
 }
 
 template <class T>

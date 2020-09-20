@@ -71,6 +71,8 @@ public:
 
 	T& operator [](size_t index) override;
 
+	T Get(size_t i) override;
+
 	void PushBack(T data) override;
 
 	void PopBack() override;
@@ -120,7 +122,7 @@ VectorList<T>& VectorList<T>::operator=(VectorList<T>&& other) noexcept
 template <class T>
 VectorList<T>::VectorList(const std::vector<T>& other)
 {
-	_pData(other);
+	_pData = other;
 }
 
 template <class T>
@@ -139,6 +141,12 @@ template <class T>
 T& VectorList<T>::operator[](size_t index)
 {
 	return _pData[index];
+}
+
+template <class T>
+T VectorList<T>::Get(size_t i)
+{
+	return _pData[i];
 }
 
 template <class T>

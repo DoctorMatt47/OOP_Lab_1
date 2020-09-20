@@ -16,6 +16,13 @@ public:
 	virtual ~IList() = default;
 
 	/**
+	 * Returns an element at position i in the container.
+	 * \param i Position of an element in the container.
+	 * \return The element at the specified position in the container.
+	 */
+	virtual T Get(size_t i) = 0;
+
+	/**
 	* Adds the element to the end of the container.
 	* \param data The element value to add.
 	*/
