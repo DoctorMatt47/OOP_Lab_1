@@ -139,13 +139,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Dice Files\Dice.cpp" />
+    <ClCompile Include="Dice Files\Face.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Dice Files\Set.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="IList.h" />
-    <ClInclude Include="LinkedList.h" />
-    <ClInclude Include="ListSorter.h" />
-    <ClInclude Include="Node.h" />
+    <ClInclude Include="Dice Files\Dice.h" />
+    <ClInclude Include="Dice Files\Face.h" />
+    <ClInclude Include="Lists Files\ArrayList.h" />
+    <ClInclude Include="Lists Files\IArray.h" />
+    <ClInclude Include="Lists Files\IList.h" />
+    <ClInclude Include="Lists Files\LinkedList.h" />
+    <ClInclude Include="Lists Files\ListSorter.h" />
+    <ClInclude Include="Lists Files\Node.h" />
+    <ClInclude Include="Lists Files\VectorList.h" />
+    <ClInclude Include="Dice Files\Set.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -5,32 +5,67 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Lists Files">
+      <UniqueIdentifier>{d86a1728-0a36-4c83-bc0a-448f876d8951}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dice Files">
+      <UniqueIdentifier>{6e0cd9c4-e771-453c-aad2-612f7db6f85d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dice Files\Header Files">
+      <UniqueIdentifier>{7525c2a8-8e50-48fe-9f50-b77216edc0c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dice Files\Cpp Files">
+      <UniqueIdentifier>{2f26a751-8168-4b5b-a3bb-75d9a5e7efa2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Dice Files\Dice.cpp">
+      <Filter>Dice Files\Cpp Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Dice Files\Face.cpp">
+      <Filter>Dice Files\Cpp Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Dice Files\Set.cpp">
+      <Filter>Dice Files\Cpp Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Node.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Lists Files\ArrayList.h">
+      <Filter>Lists Files</Filter>
     </ClInclude>
-    <ClInclude Include="IList.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Lists Files\IArray.h">
+      <Filter>Lists Files</Filter>
     </ClInclude>
-    <ClInclude Include="LinkedList.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Lists Files\IList.h">
+      <Filter>Lists Files</Filter>
     </ClInclude>
-    <ClInclude Include="ListSorter.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Lists Files\LinkedList.h">
+      <Filter>Lists Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Lists Files\ListSorter.h">
+      <Filter>Lists Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Lists Files\Node.h">
+      <Filter>Lists Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Lists Files\VectorList.h">
+      <Filter>Lists Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dice Files\Dice.h">
+      <Filter>Dice Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dice Files\Face.h">
+      <Filter>Dice Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dice Files\Set.h">
+      <Filter>Dice Files\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
