@@ -15,22 +15,83 @@ template <class T>
 class ListSorter
 {
 private:
+	/**
+	 * Additional function for Quick sort algorithm. 
+	 * \param list An array with data to be sorted.
+	 * \param low Low limit of the partition.
+	 * \param high High limit of the partition.
+	 * \param comparePredicate Predicate used to compare elements the the array.
+	 * \return Mid number.
+	 */
 	static int Partition(IArray<T>& list, int low, int high, std::function<bool(T, T)> comparePredicate);
 	
+	/**
+	 * Additional function for Quick sort algorithm.  
+	 * \param l Low limit of the partition.
+	 * \param h High limit of the partition.
+	 * \param comparePredicate Predicate used to compare elements the the array.
+	 * \return
+	 */
 	static Node<T>* Partition(Node<T>* l, Node<T>* h, std::function<bool(T, T)> comparePredicate);
 
+	/**
+	 * Additional function for Quick sort algorithm. 
+	 * \param list An array with data to be sorted.
+	 * \param low Low limit
+	 * \param high High limit
+	 * \param comparePredicate Predicate used to compare elements the the array.
+	 */
 	static void QuickSortRecursive(IArray<T>& list, int low, int high, std::function<bool(T, T)> comparePredicate);
 
+	/**
+	 * Additional function for Quick sort algorithm. 
+	 * \param l Low limit.
+	 * \param h High limit.
+	 * \param comparePredicate Predicate used to compare elements the the array. 
+	 */
 	static void QuickSortRecursive(Node<T>* l, Node<T>* h, std::function<bool(T, T)> comparePredicate);
 
+	/**
+	 * Additional function for Merge sort algorithm.  
+	 * \param head First element of the list.
+	 * \return Middle element.
+	 */
 	static Node<T>* Split(Node<T>* head);
 
+	/**
+	 * Additional function for Merge sort algorithm.  
+	 * \param first First list to merge
+	 * \param second Second list to merge.
+	 * \param comparePredicate Predicate used to compare elements the the array.
+	 * \return Middle element.
+	 */
 	static Node<T>* Merge(Node<T>* first, Node<T>* second, std::function<bool(T, T)> comparePredicate);
 
+	/**
+	 * Additional function for Merge sort algorithm. 
+	 * \param list An array with data to be sorted.
+	 * \param low Low element index.
+	 * \param mid Mid element index.
+	 * \param high High element index.
+	 * \param comparePredicate Predicate used to compare elements the the array.
+	 */
 	static void Merge(IArray<T>& list, int low, int mid, int high, std::function<bool(T, T)> comparePredicate);
 
+	/**
+	 * Additional function for Merge sort algorithm.
+	 * \param first First element to merge.
+	 * \param comparePredicate Predicate used to compare elements the the array. 
+	 * \return Middle element.
+	 */
 	static Node<T>* MergeSortRecursive(Node<T>* first, std::function<bool(T, T)> comparePredicate);
 
+	/**
+	 *  Additional function for Merge sort algorithm.
+	 * \param list An array with data to be sorted.
+	 * \param low Low element index.
+	 * \param high High element index.
+	 * \param comparePredicate Predicate used to compare elements the the array.
+	 */
 	static void MergeSortRecursive(IArray<T>& list, int low, int high, std::function<bool(T, T)> comparePredicate);
 	
 public:
@@ -40,7 +101,7 @@ public:
 	/**
 	 * A function to sort an array using gnome sort algorithm.
 	 * \param list An array with data to be sorted. That class must be inherited from IArray interface.
-	 * \param comparePredicate Predicate used to compare elements the thw array.
+	 * \param comparePredicate Predicate used to compare elements the the array.
 	 * Returns ​true if the first argument is greater than or equals to the second.
 	 */
 	static void GnomeSort(IArray<T>& list, std::function<bool(T, T)> comparePredicate);
