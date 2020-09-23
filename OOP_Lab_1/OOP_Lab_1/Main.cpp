@@ -1,7 +1,5 @@
 #include "Dice Files/Set.h"
 
-using namespace std;
-
 int main()
 {
 	Set s1;
